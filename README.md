@@ -6,30 +6,32 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
 </div>
 
-## 📖 简介
+English | [简体中文](./README_zh.md)
 
-`fflow-sdk-go` 是一个 fflow 的 Go 语言 SDK，为 FaaS（函数即服务）提供完整的开发框架。该 SDK 使开发者能够轻松构建、部署和管理无服务器函数，无需关心底层基础设施的复杂性。
+## 📖 Introduction
 
-## ✨ 特性
+`fflow-sdk-go` is a Go SDK for fflow, providing a comprehensive development framework for FaaS (Function as a Service). This SDK enables developers to easily build, deploy, and manage serverless functions without worrying about the complexity of underlying infrastructure.
 
-- 🛠️ 简洁的函数开发接口
-- 🔄 完整的上下文管理系统
-- 📝 集成的日志管理功能
-- 💾 内置的存储接口
-- 📊 元数据管理支持
-- 🔌 灵活的扩展能力
+## ✨ Features
 
-## 🔧 安装
+- 🛠️ Simple function development interface
+- 🔄 Complete context management system
+- 📝 Integrated logging functionality
+- 💾 Built-in storage interface
+- 📊 Metadata management support
+- 🔌 Flexible extension capabilities
+
+## 🔧 Installation
 
 ```bash
 go get github.com/fflow-tech/fflow-sdk-go
 ```
 
-确保您的项目使用 Go 1.18 或更高版本。
+Ensure your project uses Go 1.23 or higher.
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-以下是使用 fflow-sdk-go 创建函数的简单示例：
+Here's a simple example of creating a function using fflow-sdk-go:
 
 ```go
 package main
@@ -38,81 +40,81 @@ import (
     "github.com/fflow-tech/fflow-sdk-go/faas"
 )
 
-// 定义您的函数处理器
+// Define your function handler
 func MyFunction(ctx faas.Context, event map[string]interface{}) (interface{}, error) {
-    // 获取日志记录器
+    // Get logger
     logger := ctx.Logger()
-    logger.Infof("函数已启动，处理事件: %v", event)
+    logger.Infof("Function started, processing event: %v", event)
     
-    // 使用存储功能
+    // Use storage functionality
     storage := ctx.Storage()
-    err := storage.Set("lastExecution", "success", 3600) // 有效期1小时
+    err := storage.Set("lastExecution", "success", 3600) // Valid for 1 hour
     if err != nil {
-        logger.Errorf("存储操作失败: %v", err)
+        logger.Errorf("Storage operation failed: %v", err)
         return nil, err
     }
     
-    // 获取元数据
+    // Get metadata
     metadata := ctx.Metadata()
     functionName := metadata.Name()
     functionVersion := metadata.Version()
-    logger.Infof("当前执行函数: %s, 版本: %d", functionName, functionVersion)
+    logger.Infof("Current function: %s, version: %d", functionName, functionVersion)
     
-    // 返回结果
+    // Return result
     return map[string]string{
         "status": "success",
-        "message": "函数执行成功",
+        "message": "Function executed successfully",
     }, nil
 }
 
 func main() {
-    // 函数注册和启动逻辑
+    // Function registration and startup logic
     // ...
 }
 ```
 
-## 📚 主要接口
+## 📚 Core Interfaces
 
 ### Context
 
-`Context` 是函数执行的上下文接口，提供以下功能：
+`Context` is the function execution context interface, providing:
 
-- `Logger()` - 返回日志记录接口
-- `Logs()` - 获取所有记录的日志
-- `Storage()` - 返回存储接口
-- `Metadata()` - 返回元数据接口
-- `Context()` - 返回 Go 标准库的 context.Context
+- `Logger()` - Returns logging interface
+- `Logs()` - Gets all recorded logs
+- `Storage()` - Returns storage interface
+- `Metadata()` - Returns metadata interface
+- `Context()` - Returns Go standard library's context.Context
 
 ### Logger
 
-`Logger` 提供日志记录功能：
+`Logger` provides logging functionality:
 
-- `Infof()` - 记录信息级别日志
-- `Warnf()` - 记录警告级别日志
-- `Debugf()` - 记录调试级别日志
-- `Errorf()` - 记录错误级别日志
+- `Infof()` - Log info level messages
+- `Warnf()` - Log warning level messages
+- `Debugf()` - Log debug level messages
+- `Errorf()` - Log error level messages
 
 ### Storage
 
-`Storage` 提供数据存储功能：
+`Storage` provides data storage functionality:
 
-- `Get()` - 获取存储的数据
-- `Set()` - 设置数据并指定过期时间
-- `Del()` - 删除存储的数据
+- `Get()` - Retrieve stored data
+- `Set()` - Set data with expiration time
+- `Del()` - Delete stored data
 
 ### Metadata
 
-`Metadata` 提供函数元数据管理：
+`Metadata` provides function metadata management:
 
-- `Namespace()` - 获取函数命名空间
-- `ID()` - 获取函数 ID
-- `Name()` - 获取函数名称
-- `Version()` - 获取函数版本
-- `Attribute()` - 获取指定的函数属性
+- `Namespace()` - Get function namespace
+- `ID()` - Get function ID
+- `Name()` - Get function name
+- `Version()` - Get function version
+- `Attribute()` - Get specified function attribute
 
-## 💻 进阶示例
+## 💻 Advanced Example
 
-### HTTP 触发器函数
+### HTTP Trigger Function
 
 ```go
 package main
@@ -125,29 +127,29 @@ import (
 func HttpHandler(ctx faas.Context, event map[string]interface{}) (interface{}, error) {
     logger := ctx.Logger()
     
-    // 解析 HTTP 请求
+    // Parse HTTP request
     request, ok := event["request"].(map[string]interface{})
     if !ok {
-        logger.Errorf("无效的请求格式")
+        logger.Errorf("Invalid request format")
         return map[string]interface{}{
             "statusCode": 400,
-            "body": "无效的请求格式",
+            "body": "Invalid request format",
         }, nil
     }
     
-    // 处理请求
+    // Process request
     method, _ := request["method"].(string)
     path, _ := request["path"].(string)
-    logger.Infof("收到 %s 请求: %s", method, path)
+    logger.Infof("Received %s request: %s", method, path)
     
-    // 返回 HTTP 响应
+    // Return HTTP response
     return map[string]interface{}{
         "statusCode": 200,
         "headers": map[string]string{
             "Content-Type": "application/json",
         },
         "body": json.Marshal(map[string]string{
-            "message": "请求处理成功",
+            "message": "Request processed successfully",
             "path": path,
             "method": method,
         }),
@@ -155,24 +157,24 @@ func HttpHandler(ctx faas.Context, event map[string]interface{}) (interface{}, e
 }
 ```
 
-## 🔍 使用场景
+## 🔍 Use Cases
 
-- **微服务**: 构建轻量级、可扩展的微服务
-- **API 后端**: 快速开发 API 后端服务
-- **数据处理**: 触发式数据处理任务
-- **定时任务**: 周期性执行的定时任务
-- **事件响应**: 基于事件触发的处理逻辑
+- **Microservices**: Build lightweight, scalable microservices
+- **API Backend**: Rapidly develop API backend services
+- **Data Processing**: Event-triggered data processing tasks
+- **Scheduled Tasks**: Periodically executed scheduled tasks
+- **Event Response**: Event-driven processing logic
 
-## 🤝 贡献指南
+## 🤝 Contributing
 
-我们欢迎所有形式的贡献，无论是新功能、文档改进还是问题报告。请遵循以下步骤提交您的贡献：
+We welcome all forms of contributions, whether they're new features, documentation improvements, or bug reports. Please follow these steps to submit your contribution:
 
-1. Fork 本仓库
-2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 打开一个 Pull Request
+1. Fork this repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) 许可证。
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
